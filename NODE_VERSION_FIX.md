@@ -86,3 +86,4 @@ Most deployment platforms (Vercel, Netlify, etc.) allow you to specify the Node.
 - ❌ Build failing due to Node.js v22 compatibility issues
 - ✅ Code is ready (email config, TypeScript fixes, etc.)
 - ⏳ Waiting for Node.js v20 installation
+
