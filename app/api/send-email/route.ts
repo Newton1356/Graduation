@@ -34,9 +34,19 @@ export async function POST(request: Request) {
     const userPassword = process.env.USER_EMAIL_PASSWORD;
     const clinicRecipientEmail = process.env.CLINIC_RECIPIENT_EMAIL || userEmail;
 
-    if (!clinicEmail || !clinicPassword || !userEmail || !userPassword) {
+    // Check which variables are missing
+    const missingVars: string[] = [];
+    if (!clinicEmail) missingVars.push('CLINIC_EMAIL');
+    if (!clinicPassword) missingVars.push('CLINIC_EMAIL_PASSWORD');
+    if (!userEmail) missingVars.push('USER_EMAIL');
+    if (!userPassword) missingVars.push('USER_EMAIL_PASSWORD');
+
+    if (missingVars.length > 0) {
+      console.error('Missing environment variables:', missingVars);
       return new Response(
-        JSON.stringify({ message: "Email configuration is missing. Please set CLINIC_EMAIL, CLINIC_EMAIL_PASSWORD, USER_EMAIL, and USER_EMAIL_PASSWORD environment variables." }), 
+        JSON.stringify({ 
+          message: `Email configuration is missing. Please set the following environment variables in your .env.local file: ${missingVars.join(', ')}. Make sure to restart your dev server after creating/updating .env.local.` 
+        }), 
         { 
           status: 500,
           headers: { 'Content-Type': 'application/json' }
