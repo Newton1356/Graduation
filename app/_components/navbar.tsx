@@ -31,7 +31,7 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const linkClass = (name) =>
+  const linkClass = (name: string) =>
     `py-2 px-3 transition ${
       active === name
         ? "text-[#11A4D4] font-semibold border-b-2 border-[#11A4D4]"

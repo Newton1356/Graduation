@@ -112,3 +112,4 @@ For issues or questions, check:
 - Next.js Documentation: https://nextjs.org/docs
 - Tailwind CSS v4 Docs: https://tailwindcss.com/docs
 - Vercel Documentation: https://vercel.com/docs
+

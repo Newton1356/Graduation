@@ -3,11 +3,11 @@ import nodemailer from "nodemailer";
 // Helper function to escape HTML
 function escapeHtml(text: string): string {
   const map: { [key: string]: string } = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#039;'
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;",
   };
   return text.replace(/[&<>"']/g, (m) => map[m]);
 }
@@ -20,10 +20,13 @@ export async function POST(request: Request) {
     // Validate required fields
     if (!name || !email || !message) {
       return new Response(
-        JSON.stringify({ message: "Missing required fields: name, email, and message are required." }),
+        JSON.stringify({
+          message:
+            "Missing required fields: name, email, and message are required.",
+        }),
         {
           status: 400,
-          headers: { 'Content-Type': 'application/json' }
+          headers: { "Content-Type": "application/json" },
         }
       );
     }
@@ -36,20 +39,23 @@ export async function POST(request: Request) {
 
     // Check which variables are missing
     const missingVars: string[] = [];
-    if (!clinicEmail) missingVars.push('CLINIC_EMAIL');
-    if (!clinicPassword) missingVars.push('CLINIC_EMAIL_PASSWORD');
-    if (!userEmail) missingVars.push('USER_EMAIL');
-    if (!userPassword) missingVars.push('USER_EMAIL_PASSWORD');
+    if (!clinicEmail) missingVars.push("CLINIC_EMAIL");
+    if (!clinicPassword) missingVars.push("CLINIC_EMAIL_PASSWORD");
+    if (!userEmail) missingVars.push("USER_EMAIL");
+    if (!userPassword) missingVars.push("USER_EMAIL_PASSWORD");
 
     if (missingVars.length > 0) {
-      console.error('Missing environment variables:', missingVars);
+      console.error("Missing environment variables:", missingVars);
       return new Response(
-        JSON.stringify({ 
-          message: `Email configuration is missing. Please set the following environment variables in your .env.local file: ${missingVars.join(', ')}. Make sure to restart your dev server after creating/updating .env.local.` 
-        }), 
-        { 
+        JSON.stringify({
+          message:
+            "Email configuration is missing. Please set the following environment variables in your .env.local file: " +
+            missingVars.join(", ") +
+            ". Make sure to restart your dev server after creating/updating .env.local.",
+        }),
+        {
           status: 500,
-          headers: { 'Content-Type': 'application/json' }
+          headers: { "Content-Type": "application/json" },
         }
       );
     }
@@ -66,7 +72,7 @@ export async function POST(request: Request) {
       service: "gmail",
       auth: {
         user: userEmail,
-        pass: userPassword.trim(), // Remove any trailing spaces
+        pass: (userPassword || "").trim(), // Remove any trailing spaces and satisfy TS
       },
     });
 
@@ -76,15 +82,18 @@ export async function POST(request: Request) {
       to: clinicRecipientEmail,
       replyTo: email,
       subject: "New Form Submission",
-      text: `Name: ${name}\nEmail: ${email}\nPhone: ${phone || 'N/A'}\nMessage: ${message}`,
+      text: `Name: ${name}\nEmail: ${email}\nPhone: ${phone || "N/A"}\nMessage: ${message}`,
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px;">
           <h2 style="color: #11A4D4;">New Contact Form Submission</h2>
-          <p><strong>Name:</strong> ${escapeHtml(name || '')}</p>
-          <p><strong>Email:</strong> ${escapeHtml(email || '')}</p>
-          <p><strong>Phone:</strong> ${escapeHtml(phone || 'N/A')}</p>
+          <p><strong>Name:</strong> ${escapeHtml(name || "")}</p>
+          <p><strong>Email:</strong> ${escapeHtml(email || "")}</p>
+          <p><strong>Phone:</strong> ${escapeHtml(phone || "N/A")}</p>
           <p><strong>Message:</strong></p>
-          <p style="background-color: #f5f5f5; padding: 10px; border-radius: 5px;">${escapeHtml(message || '').replace(/\n/g, '<br>')}</p>
+          <p style="background-color: #f5f5f5; padding: 10px; border-radius: 5px;">${escapeHtml(message || "").replace(
+            /\n/g,
+            "<br>"
+          )}</p>
         </div>
       `,
     };
@@ -98,7 +107,7 @@ export async function POST(request: Request) {
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px;">
           <h2 style="color: #11A4D4;">Thank You for Contacting Clinify</h2>
-          <p>Hi ${escapeHtml(name || '')},</p>
+          <p>Hi ${escapeHtml(name || "")},</p>
           <p>Thank you for contacting Clinify. We have received your message and will get back to you soon.</p>
           <p>Best regards,<br>Clinify Team</p>
         </div>
@@ -108,34 +117,33 @@ export async function POST(request: Request) {
     try {
       await clinicTransporter.sendMail(mailToClinic);
       await userTransporter.sendMail(mailToUser);
-      return new Response(
-        JSON.stringify({ message: "Emails sent!" }), 
-        { 
-          status: 200,
-          headers: { 'Content-Type': 'application/json' }
-        }
-      );
+      return new Response(JSON.stringify({ message: "Emails sent!" }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
     } catch (error: any) {
-      console.error('Email sending error:', error);
+      console.error("Email sending error:", error);
       return new Response(
-        JSON.stringify({ 
-          message: error.message || 'Failed to send email. Please try again later.' 
-        }), 
-        { 
+        JSON.stringify({
+          message:
+            error.message ||
+            "Failed to send email. Please try again later.",
+        }),
+        {
           status: 500,
-          headers: { 'Content-Type': 'application/json' }
+          headers: { "Content-Type": "application/json" },
         }
       );
     }
   } catch (error: any) {
-    console.error('Request parsing error:', error);
+    console.error("Request parsing error:", error);
     return new Response(
-      JSON.stringify({ 
-        message: 'Invalid request. Please check your input and try again.' 
+      JSON.stringify({
+        message: "Invalid request. Please check your input and try again.",
       }),
       {
         status: 400,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { "Content-Type": "application/json" },
       }
     );
   }
