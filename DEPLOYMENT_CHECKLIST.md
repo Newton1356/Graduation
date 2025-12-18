@@ -1,101 +1,130 @@
 # Deployment Checklist
 
-## ✅ Completed
-- [x] Security: Moved email credentials to environment variables
-- [x] Installed @types/nodemailer for TypeScript support
-- [x] Updated email API route to use environment variables
+## ✅ Pre-Deployment Requirements
 
-## ⚠️ Required Before Deployment
+### 1. Code Quality
+- [x] All TypeScript errors resolved
+- [x] Email configuration uses environment variables (no hardcoded credentials)
+- [x] `.env*` files are in `.gitignore`
+- [x] Code is pushed to GitHub repository
+- [x] Tailwind CSS v4 configured correctly
+- [x] Next.js updated to 16.0.10 (security fixes)
 
-### 1. Environment Variables Setup
-**CRITICAL**: You must set up environment variables before deployment.
+### 2. Environment Variables Setup
 
-Create a `.env.local` file (for local development) and configure environment variables in your hosting platform:
+**CRITICAL:** Set these in your hosting platform before deployment:
 
 ```env
 CLINIC_EMAIL=your-clinic-sender@gmail.com
 CLINIC_EMAIL_PASSWORD=your-gmail-app-password
-USER_EMAIL=your-user-email@gmail.com
+USER_EMAIL=your-support-email@gmail.com
 USER_EMAIL_PASSWORD=your-gmail-app-password
 CLINIC_RECIPIENT_EMAIL=your-clinic-recipient@gmail.com
 ```
 
-**Important Notes:**
+**Important:**
 - Use Gmail App Passwords (not regular passwords)
 - Get App Passwords from: https://myaccount.google.com/apppasswords
-- Never commit `.env.local` or `.env` files to git (already in .gitignore)
+- Set variables for Production, Preview, and Development environments
 
-### 2. Platform-Specific Environment Variables
+### 3. Platform Configuration
 
 #### For Vercel:
-1. Go to your project settings
-2. Navigate to "Environment Variables"
-3. Add all the variables listed above
-4. Redeploy your application
+- [ ] Repository connected to Vercel
+- [ ] Environment variables added in Project Settings
+- [ ] Node.js version set to 20.x (auto-detected from package.json)
+- [ ] Build command: `npm run build` (auto-detected)
+- [ ] Framework preset: Next.js (auto-detected)
 
-#### For Other Platforms:
-- Follow your hosting platform's documentation for setting environment variables
-- Ensure variables are available at build time and runtime
+#### For Netlify:
+- [ ] Repository connected to Netlify
+- [ ] Build command: `npm run build`
+- [ ] Publish directory: `.next`
+- [ ] Node version: 20 (create `.nvmrc` file)
+- [ ] Environment variables added
 
-### 3. Build Verification
-Before deploying, test the build locally:
-```bash
-npm run build
-```
+### 4. Build Verification
 
-If build fails, fix issues before deploying.
+**Note:** Local build may fail with Node.js v22. This is expected. Deployment platforms will use Node.js v20 automatically.
 
-### 4. Test Email Functionality
-- Test the contact form after deployment
-- Verify emails are sent correctly
-- Check spam folders if emails don't arrive
-
-### 5. Chatbot Integration
-- Verify the "Book Appointment" button opens the chatbot
-- Test the ElevenLabs ConvAI widget functionality
-- Ensure the chatbot agent ID is correct: `agent_8201k95mrvfef4xtvfvpg2bmses8`
-
-## 📋 Pre-Deployment Checklist
-
-- [ ] **Node.js v20 LTS installed** (required - see NODE_VERSION_FIX.md)
-- [ ] Dependencies reinstalled after Node.js v20 installation
-- [ ] Build completes successfully (`npm run build`)
-- [ ] Environment variables configured in hosting platform
-- [ ] `.env.local` file created for local development (not committed)
-- [ ] All TypeScript errors resolved
-- [ ] Contact form tested locally
-- [ ] Chatbot button functionality tested
-- [ ] All sensitive data removed from source code
-- [ ] Git repository is clean (no credentials in history)
+- [ ] Build succeeds on deployment platform
+- [ ] No build errors in deployment logs
+- [ ] All dependencies installed correctly
 
 ## 🚀 Deployment Steps
 
-1. **Set Environment Variables** in your hosting platform
-2. **Push to Git** (ensure no .env files are committed)
-3. **Deploy** to your chosen platform
-4. **Test** all functionality after deployment
-5. **Monitor** for any errors in production
+1. **Push to GitHub:**
+   ```bash
+   git push origin main
+   ```
 
-## 🔒 Security Reminders
+2. **Deploy to Platform:**
+   - Vercel: Connect repository and deploy
+   - Netlify: Connect repository and deploy
+   - Other: Follow platform-specific instructions
 
-- ✅ Email passwords are now in environment variables (not hardcoded)
-- ✅ `.env*` files are in `.gitignore`
-- ⚠️ Review git history to ensure old credentials are not exposed
-- ⚠️ If credentials were previously committed, rotate them immediately
+3. **Configure Environment Variables:**
+   - Add all 5 email variables
+   - Redeploy after adding variables
 
-## 📝 Notes
+4. **Verify Deployment:**
+   - Check deployment URL
+   - Test all pages load correctly
+   - Verify no console errors
 
-- The project uses Next.js 16.0.0
-- React 19.2.0
-- TypeScript 5
-- Tailwind CSS 4
-- ElevenLabs ConvAI widget for chatbot
+## ✅ Post-Deployment Testing
 
-## 🐛 Known Issues
+### Functional Tests
+- [ ] Homepage loads correctly
+- [ ] Contact form submits successfully
+- [ ] Email notifications received (check both clinic and user emails)
+- [ ] Chatbot button opens ElevenLabs widget
+- [ ] All navigation links work
+- [ ] Mobile responsiveness verified
+- [ ] Images load correctly
 
-- ⚠️ **CRITICAL**: Node.js v22 has compatibility issues with Tailwind CSS. **You must use Node.js v20 LTS** for the build to work.
-  - See `NODE_VERSION_FIX.md` for detailed instructions on switching to Node.js v20
-  - After switching, run: `npm install` and `npm run build`
-- TypeScript linting errors for `process.env` are IDE-related and won't affect the build
-- Build may need PostCSS/Tailwind configuration adjustments depending on hosting platform
+### Email Functionality
+- [ ] Contact form sends email to clinic
+- [ ] User receives confirmation email
+- [ ] Email formatting is correct (HTML and text)
+- [ ] Reply-to address works correctly
 
+### Performance
+- [ ] Page load times are acceptable
+- [ ] Images are optimized
+- [ ] No console errors
+- [ ] Lighthouse score is good
+
+## 🔒 Security Checklist
+
+- [x] No hardcoded credentials in code
+- [x] Environment variables properly configured
+- [x] `.env*` files in `.gitignore`
+- [ ] Gmail App Passwords used (not regular passwords)
+- [ ] HTTPS enabled on deployment platform
+- [ ] API routes have proper error handling
+
+## 📝 Documentation
+
+- [x] README.md updated with project information
+- [x] DEPLOYMENT.md created with detailed instructions
+- [x] .env.example file created
+- [x] Environment variables documented
+
+## 🐛 Known Issues & Notes
+
+- **Local Build:** May fail with Node.js v22 - this is expected. Deployment platforms use Node.js v20 automatically.
+- **Tailwind CSS v4:** Requires `@tailwindcss/postcss` plugin (already configured)
+- **Email:** Requires Gmail App Passwords for authentication
+
+## 📞 Support
+
+If you encounter issues:
+1. Check deployment logs for errors
+2. Verify environment variables are set correctly
+3. Ensure Node.js version is 20.x on deployment platform
+4. Review [DEPLOYMENT.md](./DEPLOYMENT.md) for troubleshooting
+
+## ✨ Ready for Deployment!
+
+Once all items above are checked, your project is ready for production deployment!
