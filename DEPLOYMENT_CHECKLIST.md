@@ -57,9 +57,11 @@ If build fails, fix issues before deploying.
 
 ## 📋 Pre-Deployment Checklist
 
+- [ ] **Node.js v20 LTS installed** (required - see NODE_VERSION_FIX.md)
+- [ ] Dependencies reinstalled after Node.js v20 installation
+- [ ] Build completes successfully (`npm run build`)
 - [ ] Environment variables configured in hosting platform
 - [ ] `.env.local` file created for local development (not committed)
-- [ ] Build completes successfully (`npm run build`)
 - [ ] All TypeScript errors resolved
 - [ ] Contact form tested locally
 - [ ] Chatbot button functionality tested
@@ -91,6 +93,9 @@ If build fails, fix issues before deploying.
 
 ## 🐛 Known Issues
 
+- ⚠️ **CRITICAL**: Node.js v22 has compatibility issues with Tailwind CSS. **You must use Node.js v20 LTS** for the build to work.
+  - See `NODE_VERSION_FIX.md` for detailed instructions on switching to Node.js v20
+  - After switching, run: `npm install` and `npm run build`
 - TypeScript linting errors for `process.env` are IDE-related and won't affect the build
 - Build may need PostCSS/Tailwind configuration adjustments depending on hosting platform
 
