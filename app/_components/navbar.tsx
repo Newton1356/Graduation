@@ -17,7 +17,10 @@ export default function Navbar() {
       sections.forEach((section) => {
         const sectionTop = section.offsetTop - 120;
         if (window.scrollY >= sectionTop) {
-          current = section.getAttribute("id");
+          const sectionId = section.getAttribute("id");
+          if (sectionId) {
+            current = sectionId;
+          }
         }
       });
 
