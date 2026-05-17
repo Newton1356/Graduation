@@ -83,8 +83,8 @@ const onSubmit = async (data: any) => {
 
       {/* HERO SECTION */}
       <div
-        className="min-h-screen bg-gray-50 flex flex-col md:flex-row items-center justify-between px-4 md:px-20 py-18 gap-10"
-        style={{ "--color-main": "#11A4D4" }}
+        className="  bg-[var(--color-main)] min-h-screen bg-gray-50 flex flex-col md:flex-row items-center justify-between px-4 md:px-20 py-18 gap-10"
+        
       >
         {/* Left */}
         <motion.div
@@ -464,7 +464,7 @@ const onSubmit = async (data: any) => {
               className="px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#11A4D4] w-full"
               {...register("name", { required: "Name is required" })}
             />
-            {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
+{errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message as string}</p>}
           </div>
 
           {/* Email */}
@@ -478,7 +478,7 @@ const onSubmit = async (data: any) => {
                 pattern: { value: /^\S+@\S+$/, message: "Enter a valid email" },
               })}
             />
-            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+{errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message as string}</p>}
           </div>
 
           {/* Phone */}
@@ -492,7 +492,7 @@ const onSubmit = async (data: any) => {
                 pattern: { value: /^[0-9]{10,15}$/, message: "Enter a valid phone number" },
               })}
             />
-            {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>}
+{errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone.message as string}</p>}
           </div>
 
           {/* Message */}
@@ -502,8 +502,7 @@ const onSubmit = async (data: any) => {
               className="px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#11A4D4] resize-none h-32 w-full"
               {...register("message", { required: "Message is required" })}
             ></textarea>
-            {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message.message}</p>}
-          </div>
+{errors.message && <p className="text-red-500 text-sm mt-1">{errors.message.message as string}</p>}          </div>
 
           {/* Submit */}
           <button

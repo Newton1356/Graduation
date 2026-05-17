@@ -11,10 +11,10 @@ const nextConfig: NextConfig = {
   },
   
   // Enable compression
-  compress: true,
+  compress: true
   
   // Production optimizations
-  swcMinify: true,
+ 
 };
 
 export default nextConfig;
